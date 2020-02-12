@@ -1,0 +1,49 @@
+<project name="leadapp" default="war" basedir=".">
+
+    <description>Build Script to build the soms Project</description>
+
+    <property file="build.properties"/>
+
+    <path id="build.classpath">
+        <fileset dir="Webroot/WEB-INF/lib" includes="*.jar"/>
+	</path>
+    
+	 <target name = "compile"      description = "compiles project files to dist/classes">
+        <delete dir="build/classes"/>
+		<mkdir dir="build/classes" />
+        <javac srcdir="src/java" destdir="build/classes" includes="**/*.java"
+         classpathref="build.classpath" />
+    </target>
+
+    <target name="jar" depends="compile" description="jars the project files">
+    	<delete dir="build/jar"/>
+		<mkdir dir="build/jar" />
+        <delete file = "build/jar/leadapp.jar"/>
+        <jar jarfile = "build/jar/leadapp.jar"
+             basedir = "build/classes" includes = "**/*.class"/>
+    </target>
+
+
+    <target name="war" depends="jar"   description="builds the application war file">    	
+       
+	   <delete dir="build/war"/>
+	   <mkdir dir="build/war"/>
+ 	   <war  destfile="build/war/leadapp.war" webxml="Webroot/WEB-INF/web.xml">
+
+            <fileset dir="Webroot">
+                <include name="**" />
+                <exclude name="WEB-INF/**" />
+            </fileset>
+
+			<classes dir="build/classes" includes="**/*.class"/>	
+        	<lib dir="Webroot/WEB-INF" includes="hibernate.cfg.xml, mappings/*.xml,*.properties "/>
+        	
+                    	
+                       
+        </war>
+    	
+    </target>
+
+
+
+</project>
